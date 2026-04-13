@@ -69,6 +69,20 @@ app.put("/todos/:id", async(req, res) =>{
 })
 
 
+//TOGGLE complete on a Todo
+app.patch("/todos/:id/toggle", async (req, res) => {
+    try {
+        const { id } = req.params;
+        const result = await pool.query(
+            "UPDATE todo SET completed = NOT completed WHERE todo_id = $1 RETURNING *",
+            [id]
+        );
+        res.json(result.rows[0]);
+    } catch (error) {
+        console.error(error.message);
+    }
+});
+
 //DELETE a Todo
 
 app.delete("/todos/:id",  async(req, res) =>{
